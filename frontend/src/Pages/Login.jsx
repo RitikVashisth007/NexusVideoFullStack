@@ -164,7 +164,7 @@ function Login({location, history}) {
 
     useEffect(() => {
         if(userInfo){
-            history.push('home')
+            history.push('/')
         }
     }, [history,userInfo])
 

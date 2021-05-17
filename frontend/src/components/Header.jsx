@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState, useRef} from 'react'
 
 import styled from 'styled-components'
 
@@ -155,7 +155,7 @@ const UserSerach = styled.div`
 }
 .dropdown-ul{
     position: absolute;
-    display:none;
+    display: ${({ profile }) => profile  ? 'inlines' : 'none' };
     top:40px;
     border-radius:5px;
     
@@ -225,7 +225,7 @@ function Header() {
     
 
     
-
+    const [showProfile, setShowProfile] = useState(false)
 
     const [searchValue, setSearchValue] = useState('')
     const [searchModel, setSearchModel] = useState(false)
@@ -246,15 +246,30 @@ function Header() {
             if(window.pageYOffset>1){
                 
                 setscrolled(window.pageYOffset)
+                setShowProfile(false)
         
             }
         })
     }, [(window.pageYOffset)])
+
+
+    const menuRef = useRef();
+
+
+    useEffect(() => {
+        document.addEventListener("mousedown",(event)=>{
+        if(!menuRef.current.contains(event.target)){
+            setShowProfile(false)
+        }
+        })
+        
+    },[])
+    
     
 
-    window.addEventListener('load', (event) => {
-        const DropDown = document.querySelector('.dropdown-ul')
-      });
+    // window.addEventListener('load', (event) => {
+    //     const DropDown = document.querySelector('.dropdown-ul')
+    //   });
 
     
     
@@ -262,10 +277,10 @@ function Header() {
      
     
 
-    const dropdownHandler = ()=>{
-        const DropDown = document.querySelector('.dropdown-ul')
-        DropDown.classList.toggle('show-dropdown')
-    }
+    // const dropdownHandler = ()=>{
+    //     const DropDown = document.querySelector('.dropdown-ul')
+    //     DropDown.classList.toggle('show-dropdown')
+    // }
     const logoutHandler =()=>{
         dispatch(logout)
         
@@ -285,17 +300,17 @@ function Header() {
                     <li><Link to='/newpopular'>New & Popular</Link></li>
                 </ul>
             </HeaderLinks>
-            <UserSerach>
+            <UserSerach profile={showProfile} >
             <div  className = 'search-box'>
                     <input onChange={(e)=>{return setSearchValue(e.currentTarget.value), setSearchModel(true)}} className = "search-text" type="search" placeholder = "Title, Action, Fantasy "/>
                     <a  className = "search-btn">
                     <GrSearch />
                     </a>
             </div>
-            <div onClick={()=>setSearchModel(false)} className='profilebutton'>
-                <button  onClick={dropdownHandler} ><img src="https://occ-0-3213-3647.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABZ2mdn_92ruEqx0QzXDv947nXRyeamVpcKT4xbR6N-51JGWihqgKLLIX9gO_E319FW3Qoqff4ujjappyQ8uskyFS6Q.png?r=a41" alt="profileplaceholder" /><IoMdArrowDropdown id='dropdown-icon' /></button>
-                <ul className='dropdown-ul'>
-                    <li><Link to='profile'>{userInfo?userInfo.first_name:'Account'}</Link></li>
+            <div ref={menuRef} onClick={()=>setSearchModel(false)} className='profilebutton'>
+                <button  onClick={()=>setShowProfile(!showProfile)} ><img src="https://occ-0-3213-3647.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABZ2mdn_92ruEqx0QzXDv947nXRyeamVpcKT4xbR6N-51JGWihqgKLLIX9gO_E319FW3Qoqff4ujjappyQ8uskyFS6Q.png?r=a41" alt="profileplaceholder" /><IoMdArrowDropdown id='dropdown-icon' /></button>
+                <ul onClick={()=>setShowProfile(!showProfile)} className='dropdown-ul'>
+                    <li><Link  to='profile'>{userInfo?userInfo.first_name:'Account'}</Link></li>
                     <li>Account</li>
                     <li><div onClick={logoutHandler}>Logout</div></li>
                     <li>Help Centre</li>

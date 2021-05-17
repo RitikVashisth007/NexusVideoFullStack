@@ -96,6 +96,7 @@ button{
     margin-top:24px;
     font-weight:600;
     color:white;
+    cursor: pointer;
 }
 `
 
@@ -179,7 +180,7 @@ function Register({location,history}) {
 
     useEffect(() => {
         if(userInfo){
-            history.push('home')
+            history.push('/')
         }
     }, [history,userInfo])
 

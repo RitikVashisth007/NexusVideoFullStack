@@ -27,7 +27,7 @@ function App() {
 
 
 
-  return (
+  return ( 
     <div className="App">
       <Route path='/login' component={Login} />
       <Route path='/register' component={Register} />
