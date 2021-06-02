@@ -1,17 +1,19 @@
-import React,{useState,useEffect} from 'react';
-import { useLocation } from "react-router-dom";
-import styled from 'styled-components';
+import React, {useEffect, useState} from 'react'
+import {useParams, useHistory} from 'react-router-dom'
+import styled from 'styled-components'
+import {useDispatch, useSelector} from 'react-redux'
 import ReactModal from 'react-modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import {FaPlay,FaPlus} from 'react-icons/fa';
+import {FaPlay,FaPlus,FaMinus} from 'react-icons/fa';
+
+
+import {singleMovieAction , singleSeriesAction, seriesAction , movieAction} from '../redux/content/content.action'
+import {movieWatchlistAction, movieWatchlistAddAction, movieWatchlistDeleteAction , seriesWatchlistAction , seriesWatchlistAddAction, seriesWatchlistDeleteAction} from '../redux/watchlist/watchlist.Action'
+import Carousel from 'react-elastic-carousel';
 import ThumnailBox from '../components/ThumnailBox'
 
-import {useSelector,useDispatch} from 'react-redux'
-import {seriesAction , movieAction} from '../redux/content/content.action'
-import Carousel from 'react-elastic-carousel';
 
-
-
+//    Styled Component -------------------------------------------------
 
 
 const MainContainer = styled.div`
@@ -217,7 +219,14 @@ const Down = styled.div`
 `
 
 
+
+// ***********END OF STYLED COMPONENT --------------------------------- 
+
+
+
+
 function DetailScreen() {
+
 
     const breakPoints = [
         { width: 1, itemsToShow: 1 },
@@ -228,58 +237,161 @@ function DetailScreen() {
         { width: 1750, itemsToShow: 6 },
       ]
 
+      const [model, setModel] = useState(false)
+
+    
+    
+  const [item, setitem] = useState()
+  
+  const [watchlistButton, setwatchlistButton] = useState(true)
+    
+
+
+    const {id,type} = useParams()
+    
+    const {seriesLoading, singleSeriesDetail} = useSelector(state => state.singleSeriesDetail)
+    const {movieLoading, singleMovieDetail} = useSelector(state => state.singleMovieDetail)
+
+    const movieWatchlistSelector = useSelector(state => state.movieWatchlistDetails)
+    const {movieWatchlistDetails} = movieWatchlistSelector
+
+    const seriesWatchlistSelector = useSelector(state => state.seriesWatchlistDetails)
+    const {seriesWatchlistDetails} = seriesWatchlistSelector
+    
+
+
+    
+    
+    
     const seriesSelector = useSelector(state => state.seriesDetails)
     const movieSelector = useSelector(state => state.movieDetails)
-    const dispatch = useDispatch()
+    const userSelector = useSelector(state => state.login)
+    const {userInfo} = userSelector
+    const token = userInfo.token
+    // console.log(token);
+     
 
-    
+
     const {movieDetails} = movieSelector
     const {loading,seriesDetails} = seriesSelector
-    // const {loading,movieDetails} = movieSelector
-    useEffect(() => {
-        dispatch(seriesAction())
-        dispatch(movieAction())
+
+    
+    
+    const history = useHistory()
+
+    
+
+    
+
+
+    
+
+    const dispatch = useDispatch()
+
+   useEffect(() => {
+       
+       if(type==='movie'){
+            dispatch(singleMovieAction(id))
+            dispatch(movieWatchlistAction(token))
+            dispatch(movieAction())
+
+       }
+       else{
+
+            dispatch(singleSeriesAction(id))
+            dispatch(seriesWatchlistAction(token))
+            dispatch(seriesAction())
+       }
+
+            
         
-    }, [dispatch])
+   }, [dispatch])
+
+   
 
 
-    const [item, setItem] = useState('')
-    
+   
 
-    const location = useLocation()
+   useEffect(() => { 
+        setitem(type==='series'?singleSeriesDetail:singleMovieDetail)
+        
+        
+   }, [singleSeriesDetail,singleMovieDetail,type,id])
 
-    useEffect(()=>{
+
+
+
+
+useEffect(() => {
+    if(type==='movie'){
+        let itemExist = (movieWatchlistDetails&&movieWatchlistDetails.filter(item=>item.movie.id==id))
+        if(itemExist&&itemExist.length>0){
+            setwatchlistButton(false)
+            
+        }
+
+    }
+    else{
+        let itemExist = (seriesWatchlistDetails&&seriesWatchlistDetails.filter(item=>item.series.id==id))
+        
+        
+        if(itemExist&&itemExist.length>0){
+            setwatchlistButton(false) 
+        }
+
+    }
+}, [movieWatchlistDetails, seriesWatchlistDetails, type])
+
+
+
+   const watchlistAddhandler = () =>{
+
+        if(type==='movie'){
+            dispatch(movieWatchlistAddAction(id , token))
+
+            
+        }
+        else
+        {
+            dispatch(seriesWatchlistAddAction(id , token))
+        }
+        setwatchlistButton(!watchlistButton)
 
         
-        const item = location.state?.item
-        // console.log(item)
-        setItem(item)
+   }  
 
-    },[item,location])
+
+   const watchlistRemoveHandler = () =>{
+
+    if(type==='movie'){
+        dispatch(movieWatchlistDeleteAction(id , token))
+
+    }
+    else{
+        dispatch(seriesWatchlistDeleteAction(id , token))
+    }
+    setwatchlistButton(!watchlistButton)
+ 
+       
+   }
+
+
+
    
-    
-    
-    // console.log(seriesDetails);
 
 
-    const [model, setModel] = useState(false)
-    
 
-    
-    // console.log(movieDetails&&movieDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])))
-    // console.log(seriesDetails&&seriesDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])))
-    // console.log(item.genres.split(',')[0]||item.genres.split(',')[1]);
-
-    // const suggestionList = seriesDetails? seriesDetails&&seriesDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])).concat(movieDetails&&movieDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1]))):'hello'
-    
-    
-    
    
+
+
+
+
     return (
+        
         <MainContainer>
-              {item? 
-              <div>
-          
+        {item? 
+        <div>
+    
                 <DetailContainer  >
                         
                     
@@ -297,7 +409,7 @@ function DetailScreen() {
                             <div className='play-watchlist'>
                                 
                                 <button className='video-play-button' onClick={()=>setModel(true)} > <FaPlay/> Watch Now</button>
-                                <button className="watchlist"  > <FaPlus/> <p id="watchlist-text" >WATCHLIST</p> </button>
+                                <button  className="watchlist"  > {watchlistButton? <FaPlus onClick={watchlistAddhandler}  /> : <FaMinus onClick={watchlistRemoveHandler} />  }  <p id="watchlist-text" >WATCHLIST</p> </button>
 
                             </div>
                             
@@ -312,69 +424,77 @@ function DetailScreen() {
 
                         
                 </DetailContainer>
-                    <Down>
-                        <FirstSection>
-                            {loading?<h2>LOading</h2>:seriesDetails&&
-                                
-                                <Carousel breakPoints={breakPoints}  >
-                                    {item.currentSeason
-                                    ?loading?<h2>LOading</h2>:seriesDetails&&seriesDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])).slice(0,8).map((item)=> <ThumnailBox key={item.id} item={item}/>)
-                                    :loading?<h2>LOading</h2>:movieDetails&&movieDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])).slice(0,8).map((item)=> <ThumnailBox key={item.id} item={item}/>)
-                                    }
-                                    
-                                </Carousel>}
 
-                        </FirstSection>
-                        </Down>
+          <Down>
+                  <FirstSection   >
+                      {loading?<h2>LOading</h2>:item&&
+                          
+                          <Carousel  breakPoints={breakPoints} showEmptySlots >
+                             
+                              {item.currentSeason
+                              ?loading?<h2>LOading</h2>:seriesDetails&&seriesDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])).slice(0,8).map((item)=> <div onClick={()=>history.go(0)}  key={item.id} > <ThumnailBox  key={item.id} item={item}/></div>)
+                              :loading?<h2>LOading</h2>:movieDetails&&movieDetails.filter(items => items.genres.includes(item.genres.split(',')[0]||item.genres.split(',')[1])).slice(0,8).map((item)=> <div onClick={()=>history.go(0)}  key={item.id} > <ThumnailBox key={item.id} item={item}/> </div>)
+                              }
+                              
+                          </Carousel>}
 
+                  </FirstSection>
+                  </Down>
+
+          
+          <ReactModal  ariaHideApp={false} isOpen={model}  onRequestClose={()=>setModel(false)} 
+          style={{
+              overlay: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                zIndex:20,
                 
-                <ReactModal  ariaHideApp={false} isOpen={model}  onRequestClose={()=>setModel(false)} 
-                style={{
-                    overlay: {
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      backgroundColor: 'rgba(0,0,0,0.8)',
-                      zIndex:20,
-                      
 
-                    },
-                    content: {
-                      position: 'absolute',
-                      top: '0',
-                      left: '0',
-                      right: '40',
-                      bottom: '0',
-                      
-                      background: 'black',
-                      overflow: 'auto',
-                      WebkitOverflowScrolling: 'touch',
-                      
-                      outline: 'none',
-                      border:'none',
-                      padding: '20px',
-                      zIndex:20,
-                    }
-                  }}
-            
-            >
-                 
-                <FullScreen>
-                    <IframeVideo src={item.link+"?autoplay=1&loop=1&controls=0&showinfo=0"} >
-                        
+              },
+              content: {
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                right: '40',
+                bottom: '0',
+                
+                background: 'black',
+                overflow: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                
+                outline: 'none',
+                border:'none',
+                padding: '20px',
+                zIndex:20,
+              }
+            }}
+      
+      >
+           
+          <FullScreen>
+              <IframeVideo src={item.link+"?autoplay=1&loop=1&controls=0&showinfo=0"} >
+                  
 
-                    </IframeVideo>
-                    <button  className='close-button' onClick={()=>setModel(false)} > <AiFillCloseCircle/> </button>
-                 </FullScreen>
-                 
-            </ReactModal>
-            </div>
+              </IframeVideo>
+              <button  className='close-button' onClick={()=>setModel(false)} > <AiFillCloseCircle/> </button>
+           </FullScreen>
+           
+      </ReactModal>
+      
+      </div>
+
 :<h2>Loading</h2>}
+  
+  </MainContainer>
+
+    
         
-        </MainContainer>
     )
-}
+
+        }
 
 export default DetailScreen

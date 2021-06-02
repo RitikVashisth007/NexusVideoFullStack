@@ -15,6 +15,11 @@ const MainContainer = styled.div`
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
     padding-top:30px;
+    @media (max-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+    
+}
     
 `
 
@@ -49,6 +54,10 @@ const LinkContainer = styled.div `
         
         
     }
+    @media (max-width: 768px) {
+        display: none;
+    
+}
     
 
 `

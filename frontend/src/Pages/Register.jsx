@@ -49,6 +49,8 @@ const FrontScreen = styled.div`
     width:100%;
     justify-content:center;
     display:flex;
+    background-repeat:no-repeat;
+    background-size:cover;
     
 `
 

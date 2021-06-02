@@ -48,6 +48,8 @@ const FrontScreen = styled.div`
     height:100vh;
     width:100%;
     justify-content:center;
+    background-repeat:no-repeat;
+    background-size:cover;
     display:flex;
 `
 

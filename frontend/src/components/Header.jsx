@@ -31,6 +31,11 @@ const MainHeader = styled.div`
     width:100vw;
     z-index:10;
 
+    @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+   }
+
     
     
 `
@@ -41,6 +46,10 @@ const LogoContainer = styled.div`
     }
     padding-left:25px;
     padding-top:2px;
+
+    @media (max-width: 768px) {
+    display: none;
+   }
 `
 
 const HeaderLinks = styled.div`
@@ -64,6 +73,12 @@ const HeaderLinks = styled.div`
         
         
     }
+    @media (max-width: 768px) {
+        ul{
+            padding-left: 0;
+            font-size: 14px;
+        }
+   }
     
 `
 
@@ -192,6 +207,13 @@ const UserSerach = styled.div`
     font-size:17px;
 }
 
+  
+@media (max-width: 768px) {
+    padding-right: 0;
+
+    
+    
+}
 
 
     
@@ -297,10 +319,10 @@ function Header() {
                     <li> <Link to='/'>Home</Link> </li>
                     <li><Link to='/Movie'>Movies</Link></li>
                     <li><Link to='/Series'>Series</Link></li>
-                    <li><Link to='/newpopular'>New & Popular</Link></li>
+                    <li><Link to='/feelinglucky'>Feeling Lucky</Link></li>
                 </ul>
             </HeaderLinks>
-            <UserSerach profile={showProfile} >
+            <UserSerach  profile={showProfile?showProfile:''} >
             <div  className = 'search-box'>
                     <input onChange={(e)=>{return setSearchValue(e.currentTarget.value), setSearchModel(true)}} className = "search-text" type="search" placeholder = "Title, Action, Fantasy "/>
                     <a  className = "search-btn">

@@ -13,11 +13,12 @@ export const login = (email,password) => async(dispatch) => {
 
         const config = {
             headers: {
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                
             }
         }
 
-        const {data} = await axios.post('api/user' , 
+        const {data} = await axios.post('https://nexusbackend.herokuapp.com/api/user' , 
             { 'username': email, 'password':password },
             config
         
@@ -61,11 +62,12 @@ export const register = (email,password,name) => async(dispatch) => {
 
         const config = {
             headers: {
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                
             }
         }
 
-        const {data} = await axios.post('api/registerUser' , 
+        const {data} = await axios.post('https://nexusbackend.herokuapp.com/api/registerUser' , 
             { 'name':name, 'email': email, 'password':password,  },
             config  
         

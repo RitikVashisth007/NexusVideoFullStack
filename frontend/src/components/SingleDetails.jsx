@@ -169,7 +169,7 @@ const FullScreen = styled.div`
 function SingleDetails({contentDetails}) {
 
     
-    // console.log(seriesDetails);
+    
     const [model, setModel] = useState(false)
  
     return (
@@ -186,20 +186,19 @@ function SingleDetails({contentDetails}) {
                             
                             </div>
                         
-                        <p>{contentDetails.contentDetails}</p>
+                        
 
                         <div className='play-watchlist'>
                             
                             <button className='video-play-button' onClick={()=>setModel(true)} > <FaPlay/> Watch Now</button>
-                            <Link
-                            to={{
-                                pathname: `/detail?${contentDetails.title}`,
-                                state: { item: contentDetails },
-                                }}  
+                            <div >
+                            <Link 
+                            to= {`/detail/${contentDetails.contentType}/${contentDetails.id}`}   
                             >
                             <button className='moreInfo-button' > <AiOutlineInfoCircle  /> &nbsp;&nbsp; More Info</button>
 
                             </Link>
+                            </div>
 
                         </div>
                         

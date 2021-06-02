@@ -6,6 +6,7 @@ import ThumnailBox from '../components/ThumnailBox'
 import Carousel from 'react-elastic-carousel'
 import Front from '../components/Front'
 import SingleDetails from '../components/SingleDetails'
+import { seriesWatchlistAction } from '../redux/watchlist/watchlist.Action'
 
 const MainContainer = styled.div`
 
@@ -81,6 +82,14 @@ function SeriesPage() {
       ]
 
     const seriesSelector = useSelector(state => state.seriesDetails)
+    const seriesWatchlistSelector = useSelector(state => state.seriesWatchlistDetails)
+    const {seriesWatchlistLoading,seriesWatchlistDetails} = seriesWatchlistSelector
+    const userSelector = useSelector(state => state.login)
+    const {userInfo} = userSelector
+    const token = userInfo.token
+    
+    
+
     const dispatch = useDispatch()
 
     const [random, setRandom] = useState([])
@@ -90,20 +99,36 @@ function SeriesPage() {
     const {loading,seriesDetails} = seriesSelector
     useEffect(() => {
         dispatch(seriesAction())
+        dispatch(seriesWatchlistAction(token))
         
     }, [dispatch])
 
     useEffect(() => {
-        setRandom(seriesDetails&&seriesDetails[Math.floor(Math.random()*14)])
+        setRandom(Math.floor(Math.random()*33))
        
-    }, [seriesDetails])
+    },[])
+
+
     
     // console.log(seriesDetails);
 
     return (
         <MainContainer>
-                <Front contentDetails={random?random:seriesDetails&&seriesDetails[Math.floor(Math.random()*14)]} />
+                <Front contentDetails={seriesDetails&&seriesDetails[random]} />
                 <Down>
+
+                {seriesWatchlistLoading?<h2>LOading</h2>:seriesWatchlistDetails&&seriesWatchlistDetails!=0&&
+                <FirstSection>
+                    <p id='slide-type' >Watchlist</p>
+                    {/* Thumnail have Custom link based on customID and id */}
+                        <Carousel breakPoints={breakPoints} showEmptySlots  >
+                            {seriesWatchlistLoading?<h2>Loading</h2>:seriesWatchlistDetails&&seriesWatchlistDetails.slice(0,12).map((item)=> <ThumnailBox key={item.id} item={item.series}/>)}
+                        </Carousel>
+
+                </FirstSection>
+            }
+
+
                     <p id='slide-type' >Trending</p>
                     <FirstSection>
                         {loading?<h2>LOading</h2>:seriesDetails&&

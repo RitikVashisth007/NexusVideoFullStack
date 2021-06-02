@@ -6,6 +6,7 @@ import ThumnailBox from '../components/ThumnailBox'
 import Carousel from 'react-elastic-carousel'
 import Front from '../components/Front'
 import SingleDetails from '../components/SingleDetails'
+import { movieWatchlistAction } from '../redux/watchlist/watchlist.Action'
 
 const MainContainer = styled.div`
 
@@ -82,22 +83,34 @@ function MoviePage() {
       ]
 
     const movieSelector = useSelector(state => state.movieDetails)
+
+    const movieWatchlistSelector = useSelector(state => state.movieWatchlistDetails)
+    const {movieWatchlistLoading, movieWatchlistDetails} = movieWatchlistSelector
+    const userSelector = useSelector(state => state.login)
+    const {userInfo} = userSelector
+    const token = userInfo.token
+  
+
     const dispatch = useDispatch()
 
     
-      const [random, setRandom] = useState([])
+    const [random, setRandom] = useState([])
     const {loading,movieDetails} = movieSelector
     useEffect(() => {
         dispatch(movieAction())
+        dispatch(movieWatchlistAction(token))
         
 
         
     }, [dispatch])
 
+
     useEffect(() => {
-        setRandom(movieDetails&&movieDetails[Math.floor(Math.random()*14)])
+        setRandom(Math.floor(Math.random()*33))
        
-    }, [movieDetails])
+    },[])
+
+    
 
     // console.log(random)
     
@@ -105,8 +118,22 @@ function MoviePage() {
 
     return (
         <MainContainer>
-                <Front contentDetails={random?random:movieDetails&&movieDetails[Math.floor(Math.random()*14)]} />
+                <Front contentDetails={movieDetails&&movieDetails[random]} />  
                 <Down>
+
+
+                {movieWatchlistLoading?<h2>LOading</h2>:movieWatchlistDetails&&movieWatchlistDetails!=0&&
+                <FirstSection>
+                    <p id='slide-type' >Watchlist</p>
+                   
+                        <Carousel breakPoints={breakPoints} showEmptySlots  >
+                            {movieWatchlistLoading?<h2>Loading</h2>:movieWatchlistDetails&&movieWatchlistDetails.slice(0,12).map((item)=> <ThumnailBox key={item.id} item={item.movie}/>)}
+                        </Carousel>
+
+                </FirstSection>
+            }
+
+
                     <p id='slide-type' >Popular Picks</p>
                     <FirstSection>
                         {loading?<h2>LOading</h2>:movieDetails&&

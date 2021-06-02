@@ -38,6 +38,46 @@ export const movieAction = ()=> async(dispatch) =>{
 
 
 
+
+export const singleMovieAction = (id)=> async(dispatch) =>{
+
+    try {
+        dispatch({
+            type:ContentActionType.SINGLE_MOVIE_REQUEST
+        })
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+
+        const {data} = await axios.get(`/content/movie/${id}`, config)
+        
+
+        dispatch({
+            type:ContentActionType.SINGLE_MOVIE_SUCCESS,
+            payload:data,
+        })
+        
+        
+    } catch (error) {
+
+        dispatch({
+            type:ContentActionType.SINGLE_MOVIE_FAIL,
+            payload:error,
+        })
+
+        
+    }
+
+    
+
+}
+
+
+
+
 export const seriesAction = ()=> async(dispatch) =>{
 
     try {
@@ -72,3 +112,46 @@ export const seriesAction = ()=> async(dispatch) =>{
     
 
 }
+
+
+export const singleSeriesAction = (id)=> async(dispatch) =>{
+
+    try {
+        dispatch({
+            type:ContentActionType.SINGLE_SERIES_REQUEST,
+        })
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+
+        const {data} = await axios.get(`content/series/${id}`, config)
+        
+
+        dispatch({
+            type:ContentActionType.SINGLE_SERIES_SUCCESS,
+            payload:data,
+        })  
+        
+        
+    } catch (error) {
+
+        dispatch({
+            type:ContentActionType.SINGLE_SERIES_FAIL,
+            payload:error,
+        })
+
+        
+    }
+
+    
+
+}
+
+
+
+
+
+

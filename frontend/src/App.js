@@ -1,5 +1,5 @@
 import {useSelector} from 'react-redux'
-
+import React from 'react'
 
 import './App.css';
 import {Redirect, Route,Switch} from 'react-router-dom'
@@ -13,7 +13,8 @@ import DetailScreen from './Pages/DetailScreen';
 import SeriesPage from './Pages/SeriesPage';
 import MoviePage from './Pages/MoviePage';
 import Lost from './components/Lost';
-import NewPopular from './Pages/NewPopular';
+
+import FeelingLucky from './Pages/FeelingLucky';
 
 
 
@@ -24,6 +25,10 @@ function App() {
   const userLogin = useSelector(state=> state.login)
 
   const {userInfo} = userLogin
+
+
+
+
 
 
 
@@ -39,10 +44,10 @@ function App() {
         {userInfo?<Route path='/' exact component={HomePage} />:<Redirect to='/login' />}
         
         {userInfo?<Route path='/profile' exact component={Profile} />:<Redirect to='/register' />}
-        {userInfo?<Route path='/detail:id?'   component={DetailScreen} />:<Redirect to='/register' />}
+        {userInfo?<Route path='/detail/:type/:id?'   component={DetailScreen} />:<Redirect to='/register' />}
         {userInfo?<Route path='/series' exact component={SeriesPage} />:<Redirect to='/register' />}
         {userInfo?<Route path='/movie' exact component={MoviePage} />:<Redirect to='/register' />}
-        {userInfo?<Route path='/newpopular' exact component={NewPopular} />:<Redirect to='/register' />}
+        {userInfo?<Route path='/feelinglucky' exact component={FeelingLucky} />:<Redirect to='/register' />}
         <Route  component={Lost} />
         
           

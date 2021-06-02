@@ -77,10 +77,7 @@ function ThumnailBox({item}) {
     
     return (
         <MainContainer >
-            <Link  to={{
-                    pathname: `/detail?${item.title}`,
-                    state: { item: item },
-                    }}  >
+            <Link   to= {`/detail/${item.contentType}/${ item.customID?item.customID:item.id}`}  >
             <img  src={item.poster?`${item.poster}`:''} alt="thumnail pic" />
             <p id='title'>{item.title}</p>
             <div className='genres-date' ><p>{item.genres}</p> <p>{item.releaseDate.slice(0,4)}</p> </div>

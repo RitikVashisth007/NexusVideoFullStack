@@ -146,12 +146,9 @@ function Front({contentDetails}) {
                          <h2 id='title'>{contentDetails.title}</h2>
                          <button onClick={()=>setModel(true)} className='watchNow-button' > <FaPlay id='play-icon-button' /> &nbsp;&nbsp; Watch Now</button>
                      </div>
-                     <div>
+                     <div >
                          <Link
-                            to={{
-                                pathname: `/detail?${contentDetails.title}`,
-                                state: { item: contentDetails },
-                                }}  
+                            to= {`/detail/${contentDetails.contentType}/${contentDetails.id}`} 
                          >
                         <button className='moreInfo-button' > <AiOutlineInfoCircle  /> &nbsp;&nbsp; More Info</button>
 
