@@ -1,7 +1,7 @@
 # NexusVideoFullStack
 
 
-![alt text](https://res.cloudinary.com/dbi3j4bvc/image/upload/v1624853276/Ritik_Vashisth_vyyoml.png)
+![alt text](https://res.cloudinary.com/dbi3j4bvc/image/upload/v1624813418/NexusVideo/nexus_video_fq8n8c.jpg)
 
 It was a practice projects.. 
 It contains some flaws.
